@@ -342,6 +342,26 @@ Just confirm "Preferred Subtitle Language" is set. And maybe try setting it to E
 
 For an explanation of the confusion around the term _forced subtitles_, see <https://www.reddit.com/r/kodi/comments/mujddh/automatic_subtitles_only_for_specific_content/>
 
+Power button
+------------
+
+Unlike earlier Pis, the Pi 5 has a power button to turn it on and off without having to unplug it.
+
+For full details, see the [documentation](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#power-button).
+
+In summary:
+
+* Click once to power up.
+* Click once to bring up the shutdown/reboot/logout dialog.
+* Click twice in quick succession to shutdown without brining up a dialog.
+* Click and hold to hard shutdown.
+
+The single and double click options obviously require the co-operation of the OS and the behavior described applies for Raspberry Pi OS. LibreELEC may behave differently - single click probably goes straight to shutdown.
+
+TODO: the power button is a little fiddly to get, I'll probably end up soldering 2-pins of male header to the J2 jumper shown [here](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#add-your-own-power-button). I wish they'd provided with header already soldered on.
+
+Note: initially, I thought the J2 connector was the same as the GPIO 20 pin plus ground that could be used on earlier Pis to signal to OS that it should shutdown. While it behaves similarly for shutdown, the GPIO 20 pin cannot be used to power up the Pi whereas the J2 connector can (see this Reddit [discussion](https://www.reddit.com/r/cyberDeck/comments/1ao9q23/) and this OpenWRT [post](https://forum.openwrt.org/t/j2-jumper-on-raspberry-pi-5/201158/16) for confirmation of the difference). If the GPIO 20 pin had been equivalent I would have bought some taller female header (like [this](https://thepihut.com/products/stacking-header-for-pi-a-b-pi-2-pi-3-2x20-extra-tall-header)) and connected a switch to it rather than soldering header to the J2 connector.
+
 Clean library
 -------------
 
