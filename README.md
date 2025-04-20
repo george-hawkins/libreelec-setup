@@ -3,7 +3,7 @@ LibreELEC/Kodi set up on a Raspberry Pi 5
 
 After disappointing results with an [Odroid-C2](https://wiki.odroid.com/odroid-c2/odroid-c2), I wanted a setup that I felt was least likely to suffer glitching in playback and most likely to be able to handle [HEVC/H.265](https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding) content while being relatively easy to set up. So, I went with an overspec'd Raspberry Pi 5 setup running [LibreELEC](https://libreelec.tv/).
 
-Note: at various points below, I reference forum posts and comments from [Christian Hewitt](https://github.com/chewitt) - he's the project lead and platform maintainer for LibreELEC.
+Note: at various points below, I reference forum posts and comments from [Christian Hewitt](https://github.com/chewitt) - he's the project lead and platform maintainer for LibreELEC. When he recommends a given option, I've taken it as the way the to go, e.g. he always recommends the Flirc USB IR receiver as the remote control solution if you can't get CEC to work.
 
 Hardware
 --------
@@ -18,6 +18,7 @@ This is a somewhat overspec'd setup - using an SSD rather than running things of
 * [Raspberry Pi 27W USB-C power supply](https://www.raspberrypi.com/products/27w-power-supply/).
 * [Raspberry Pi SD card](https://www.raspberrypi.com/products/sd-cards/).
 * [USB card reader](https://www.ugreen.com/products/2-in-1-usb-c-otg-card-reader).
+* [Flirc USB IR receiver](https://flirc.tv/products/flirc-usb-receiver).
 
 I bought Raspberry Pi parts where possible, e.g. the HDMI cable, as unlike generic parts they're presumably guaranteed to work with the Pi (and e.g. in the case of the HDMI cable, Raspberry Pi clearly state it supports the highest resolutions etc. that the Pi itself supports).
 
@@ -315,35 +316,113 @@ Alternatives are:
 
 ### Flirc setup
 
-I've ordered a Flirc - if you go to its [product page](https://flirc.tv/products/flirc-usb-receiver) and then to the _Downloads_ section, there are installers for macOS, Windows and Linux. My understanding is that you can, e.g. plug it into your laptop, use the installer suitable for your laptop, then get it paired and configured with your remote control and then swap it over to your Pi and so avoid having to do any setup there.
+Go to the Flirc [product page](https://flirc.tv/products/flirc-usb-receiver) and then to the _Downloads_ section, there are installers for macOS, Windows and Linux.
 
-TODO
-----
+The installation instructions for the macOS version were completely wrong as of 20th April 2025 - there's no rebooting or anything else involved - you just double click the downloaded `.dmg` and copy the _Flirc_ to your _Applications_ folder and that's it.
 
-Long pressing OK on my remote to bring up the context menu (so I can e.g. mark things as watched) seems to be a general issue over CEC.
+Start the application, you see _Disconnected_ bottom-right on its main screen, plug in your _Flirc_ and once you've OKed the macOS dialog asking if you want to allow it to connect, macOS will open the _Keyboard Setup Assistant_ (because to your computer, the Flirc just looks like a keyboard).
 
-Pressing all the buttons on my remote showed that there was a red button that caused it to flip to X and a blue one that caused it to flip to Y.
+Just quit out of the _Keyboard Setup Assistant_ and back in the Flirc application, you see _Connected_ now bottom-right.
 
-So, using the details at <https://kodi.wiki/view/Keymap> first:
+The Flirc application seems a little flaky, I had it get into a state where everything including the menus started flickering several times - I just quit and restarted when this happened.
 
-* Look for how long pressing OK is set up - what's it bound _to_.
-* See if you can change the red button press to be long press.
-* Could you get blue to bring up audio settings (so I can flip subtitles and audio language track)?
+I have a universal remote like this [One for All Evolve 4](https://www.oneforall.com/universal-remotes/urc-7145-evolve-4).
 
----
+At the top of these remotes, there are different modes, e.g. TV, STB (set top box) etc.
 
-_forced subtitles_ is a term for those subtitles that come on when needed during a film that's in your language, it's for those bits where e.g. some of the characters start speaking in Russian.
+So, you program the TV mode to control you TV and then switch to e.g. the STB mode and program this mode to control your Kodi/Flirc setup.
 
-Ideally, you just want _forced subtitles_ for English. And anything that isn't English, should always use subtitles.
+The first thing to do is to program the STB button to emulate a device that you don't have so it doesn't interfere with anything you own.
 
-But it seems confusing how this should be done, my impression is that if "Preferred Subtitle Language" is set to "User Interface Language" (or English if the UI language isn't English) then it should work this out, i.e. if the film is in English it should work out that it doesn't need subtitles (and should only use _forced subtitles_ if they exist) and if it's not in English it should choose the preferred subtitle language, i.e. English.
+E.g. if your TV is a Samsung and you don't have any Sony devices then program the STB button to emulate a Sony remote control.
 
-TODO: just confirm "Preferred Subtitle Language" is set. And maybe try setting it to English and see if that makes a difference.
+Now, in the Flirc application go to the _Controllers / Kodi_ menu item. Then click one of the displayed keys and then press the corresponding button on your remote. Then go thru all the other buttons you want to program like this, I just programmed the following subset:
 
-For an explanation of the confusion around the term _forced subtitles_, see this Reddit [post](https://www.reddit.com/r/kodi/comments/mujddh/automatic_subtitles_only_for_specific_content/).
+![programmed keys](flirc-kodi.png)
 
-Power button
-------------
+Most of the buttons above are fairly obvious, but you can hover over them in the application to see a tooltip description. The "C" is perhaps the only non-obvious one - it's the _context_ menu and you don't actually have to program it as long holding the _enter_ button does the same thing. The _context_ menu is like right-clicking on a desktop/laptop, it brings up a menu of options that includes things like _Mark as watched_.
+
+To double-check that you've programmed a particular button, just press it on the remote and you should see the relevant button go green in the Flirc application.
+
+The most confusing thing I found was that on trying to use some buttons on my remote, the Flirc application warned _Button already exists_. It turned out, in my case, that the _OK_ and _Enter_ buttons on my remote generated the same IR code so they couldn't be programmed to do different things.
+
+If you get the _Button already exists_ warning, you can see what action it's already bound to by pressing the relevant button on the remote and seeing what goes green in the Flirc application. You can erase the behavior associated with a remote button with the Flirc application's big _erase_ button.
+
+The Flirc USB device is being updated as you go, there's no separate save step. So, once you're done you can just quit the Flirc application and swap the Flirc USB device over to your Pi setup. But read on before you do that.
+
+If you get into a completely confused state, just go to _File / Clear Configuration_ in the Flirc application.
+
+Oddly, on my version of the Flirc application (3.27.16), in the Kodi configuration, the power button is setup to generate the `'` key, which in Kodi causes video to skip back 7 seconds. So, to bind the power button on my remote I had to use the Flirc command line tool.
+
+This comes with the Flirc application and can only be used when the normal Flirc application isn't running. On macOS, you can use it like this:
+
+```
+$ cd /Applications/Flirc.app/Contents/Resources
+$ $ ./flirc_util help
+Commands:
+  delete         Delete next remote button flirc sees from saved database
+  ...
+```
+
+I found it useful to see that what keypresses it had been set up to emulate and confirm that they matched what I expected from the Kodi [keyboard shortcuts](https://kodi.wiki/view/Keyboard_controls).
+
+In the end, I had these keys recorded:
+
+```
+$ ./flirc_util settings
+...
+Recorded Keys:
+Index  hash       IK   ID  key
+-----  --------   ---  --  ------------
+    0  1A957E77   130  01  up
+    1  16022277   130  01  left
+    2  86259077   130  01  right
+    3  AA721077   130  01  down
+    4  DEF91077   130  01  return
+    5  3635A277   240  01  backspace
+    6  BCB21077   130  01  t
+    7  0CA1FE77   130  02  play/pause
+    8  A16C9077   130  02  play/pause
+    9  43AB1077   130  01  x
+   10  B3CE7E77   130  01  r
+   11  9C7E9077   130  01  f
+   12  F84E7E77   123  01  c
+   13  4A892277   130  01  i
+   14  7AD3DA77   130  01  s
+```
+
+As you can see, the play and pause buttons actually just toggle the same `play/pause` function.
+
+To resolve the power button issue, I did:
+
+```
+$ ./flirc_util record s
+...
+```
+
+And then pressed the power button on my remote.
+
+Note: on my universal remote, there's a primary power button that turns on several things at once, e.g. TV and sound bar, and a separate _source power button_ to turn on and off just the device that you're currently controlling. So it's this button that I associated with `s`. But you could associate it with whatever button you want, e.g. most remotes have a row with red, green, yellow and blue buttons and you could use one of those.
+
+Once I'd got `s` and everything else shown above set up, I swapped the Flirc USB device over to my Pi.
+
+Powering up the system
+----------------------
+
+On most systems (Windows, macOS and Linux), you can wake the the system from sleep with a keypress. So, it might seem possible to wake the Pi via the Flirc USB device as it just pretends to be a keyboard to the rest of the system.
+
+However, if you use the Kodi power menu, it really powers off the Pi rather than putting it to sleep.
+
+And there's no way to change this as the Pi doesn't support sleeping (this [article](https://littlebirdelectronics.com.au/blogs/news/how-can-i-sleep-a-raspberry-pi-and-wake-it-again-with-an-interrupt) discusses the available options).
+
+### Power button TODO
+
+The power button is a little fiddly to get, I'll probably end up soldering 2-pins of male header to the J2 jumper shown [here](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#add-your-own-power-button) (I wish they'd provided with header already soldered on). Then I'll create an extension cable with jumper wires and a momentary switch that I can plug into the header and make things more accessible.
+
+Note: initially, I thought the J2 connector was the same as the GPIO 20 pin (plus any ground pin) that could be used on earlier Pis to signal to OS that it should shut down. While it behaves similarly for shutdown, the GPIO 20 pin cannot be used to power up the Pi whereas the J2 connector can (see this Reddit [discussion](https://www.reddit.com/r/cyberDeck/comments/1ao9q23/) and this OpenWRT [post](https://forum.openwrt.org/t/j2-jumper-on-raspberry-pi-5/201158/16) for confirmation of the difference). If the GPIO 20 pin had been equivalent I would have bought some taller female header (like [this](https://thepihut.com/products/stacking-header-for-pi-a-b-pi-2-pi-3-2x20-extra-tall-header)) and connected a switch to it rather than soldering header to the J2 connector.
+
+Power button behavior
+---------------------
 
 Unlike earlier Pis, the Pi 5 has a power button to turn it on and off without having to unplug it.
 
@@ -356,11 +435,9 @@ In summary:
 * Click twice in quick succession to shut down without bringing up a dialog.
 * Click and hold to hard shutdown.
 
-The single and double click options obviously require the co-operation of the OS and the behavior described applies for Raspberry Pi OS. LibreELEC may behave differently - single click probably goes straight to shut down.
+The single and double click options obviously require the co-operation of the OS and the behavior described applies for Raspberry Pi OS.
 
-TODO: the power button is a little fiddly to get, I'll probably end up soldering 2-pins of male header to the J2 jumper shown [here](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#add-your-own-power-button) (I wish they'd provided with header already soldered on). Then I'll create an extension cable with jumper wires and a momentary switch that I can plug into the header and make things more accessible.
-
-Note: initially, I thought the J2 connector was the same as the GPIO 20 pin (plus any ground pin) that could be used on earlier Pis to signal to OS that it should shut down. While it behaves similarly for shutdown, the GPIO 20 pin cannot be used to power up the Pi whereas the J2 connector can (see this Reddit [discussion](https://www.reddit.com/r/cyberDeck/comments/1ao9q23/) and this OpenWRT [post](https://forum.openwrt.org/t/j2-jumper-on-raspberry-pi-5/201158/16) for confirmation of the difference). If the GPIO 20 pin had been equivalent I would have bought some taller female header (like [this](https://thepihut.com/products/stacking-header-for-pi-a-b-pi-2-pi-3-2x20-extra-tall-header)) and connected a switch to it rather than soldering header to the J2 connector.
+LibreELEC behaves differently - I've done a superficial search of the [repo](https://github.com/LibreELEC/LibreELEC.tv) but haven't found what the intended behavior is. I've found both quick single press and double press shut down the Pi but I've also had the single press hang the Pi - whether there's a distinction between the single and double press behaviors, I don't know.
 
 Clean library
 -------------
@@ -418,6 +495,19 @@ The hex value `f461` for `BOOT_ORDER` is interpreted as a sequence of instructio
 * Restart and begin the cycle again (`f`).
 
 You can change the order by running `sudo rpi-eeprom-config --edit` and changing `0xf461` to your preferred sequence, then press `ctrl-X` to exit and update the settings. You need to reboot the Pi for the settings to take effect (and for them to be shown when you run `rpi-eeprom-config`).
+
+Forced subtitles
+----------------
+
+_forced subtitles_ is a term for those subtitles that come on when needed during a film that's in your language, it's for those bits where e.g. some of the characters start speaking in Russian.
+
+Ideally, you just want _forced subtitles_ for English. And anything that isn't English, should always use subtitles.
+
+But it seems confusing how this should be done, my impression is that if "Preferred Subtitle Language" is set to "User Interface Language" (or English if the UI language isn't English) then it should work this out, i.e. if the film is in English it should work out that it doesn't need subtitles (and should only use _forced subtitles_ if they exist) and if it's not in English it should choose the preferred subtitle language, i.e. English.
+
+TODO: just confirm "Preferred Subtitle Language" is set. And maybe try setting it to English and see if that makes a difference.
+
+For an explanation of the confusion around the term _forced subtitles_, see this Reddit [post](https://www.reddit.com/r/kodi/comments/mujddh/automatic_subtitles_only_for_specific_content/).
 
 History
 -------
