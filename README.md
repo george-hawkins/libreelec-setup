@@ -415,16 +415,18 @@ However, if you use the Kodi power menu, it really powers off the Pi rather than
 
 And there's no way to change this as the Pi doesn't support sleeping (this [article](https://littlebirdelectronics.com.au/blogs/news/how-can-i-sleep-a-raspberry-pi-and-wake-it-again-with-an-interrupt) discusses the available options).
 
+But unlike earlier Pis, the Pi 5 has a power button to turn it on and off without having to unplug it. And this seems to be the only current option for powering up the system.
+
+![pi 5 features](pi-5-features.png)
+
 ### Power button TODO
 
-The power button is a little fiddly to get, I'll probably end up soldering 2-pins of male header to the J2 jumper shown [here](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#add-your-own-power-button) (I wish they'd provided with header already soldered on). Then I'll create an extension cable with jumper wires and a momentary switch that I can plug into the header and make things more accessible.
+The power button is a little fiddly to get at, I'll probably end up soldering 2-pins of male header to the J2 jumper shown [here](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#add-your-own-power-button) (I wish they'd provided with header already soldered on). Then I'll create an extension cable with jumper wires and a momentary switch that I can plug into the header and make things more accessible.
 
 Note: initially, I thought the J2 connector was the same as the GPIO 20 pin (plus any ground pin) that could be used on earlier Pis to signal to OS that it should shut down. While it behaves similarly for shutdown, the GPIO 20 pin cannot be used to power up the Pi whereas the J2 connector can (see this Reddit [discussion](https://www.reddit.com/r/cyberDeck/comments/1ao9q23/) and this OpenWRT [post](https://forum.openwrt.org/t/j2-jumper-on-raspberry-pi-5/201158/16) for confirmation of the difference). If the GPIO 20 pin had been equivalent I would have bought some taller female header (like [this](https://thepihut.com/products/stacking-header-for-pi-a-b-pi-2-pi-3-2x20-extra-tall-header)) and connected a switch to it rather than soldering header to the J2 connector.
 
 Power button behavior
 ---------------------
-
-Unlike earlier Pis, the Pi 5 has a power button to turn it on and off without having to unplug it.
 
 For full details, see the [documentation](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#power-button).
 
