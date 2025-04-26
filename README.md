@@ -338,9 +338,11 @@ Now, in the Flirc application go to the _Controllers / Kodi_ menu item. Then cli
 
 ![programmed keys](flirc-kodi.png)
 
-Most of the buttons above are fairly obvious, but you can hover over them in the application to see a tooltip description. The "C" is perhaps the only non-obvious one - it's the _context_ menu, and you don't actually have to program it as long holding the _enter_ button does the same thing. The _context_ menu is like right-clicking on a laptop, it brings up a menu of options that includes things like _Mark as watched_.
+Most of the buttons above are fairly obvious, but you can hover over them in the application to see a tooltip description. The "C" is perhaps the only non-obvious one - it's the _context_ menu - it's like right-clicking on a laptop, it brings up a menu of options that includes things like _Mark as watched_.
 
-Note: in retrospect, I wouldn't bother programming the "C" key as I always long press OK on my remote instead. And if I had a home button on my remote, I would have bound that for the minor convenience of being able to jump straight to the main Kodi page.
+Originally, I bound "C" to one of the buttons on my remote but it's redundant as the context menu can also be brought up by long pressing OK instead (OK, on my remote, is the button that I bound to _enter_).
+
+Note: if I had an obvious home button on my remote, I would have also bound that for the minor convenience of being able to jump straight to the main Kodi page.
 
 To double-check that you've programmed a particular button, just press it on the remote, and you should see the relevant button go green in the Flirc application.
 
@@ -386,7 +388,6 @@ Index  hash       IK   ID  key
     9  43AB1077   130  01  x
    10  B3CE7E77   130  01  r
    11  9C7E9077   130  01  f
-   12  F84E7E77   123  01  c
    13  4A892277   130  01  i
    14  7AD3DA77   130  01  s
 ```
