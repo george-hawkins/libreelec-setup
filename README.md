@@ -288,6 +288,73 @@ Notes:
 * There are ways to tell Kodi via its UI that it's recognized some content incorrectly and to find the correct metadata, but I found it sometimes lost these corrections when doing a subsequent update, so getting the naming of the underlying files correct seems the best way to do things.
 * Some of my movies and shows come with subfolders of extras, e.g. interviews with the director etc. If these weren't specials that are covered in The Movie DB (which I could then name correctly), it could happen that Kodi would find these files and misinterpret them as something random. As I've never had any interest in these kind of extras, I just removed them altogether but an alternative is to just create a file called `.nomedia` in any folder that you want Kodi to ignore.
 
+### .nfo files
+
+I found a situation where even all the naming tricks above didn't work - for a TV show where there were multiple different episode orders.
+
+If you go to the [TMDB page for Cowboy Bebop](https://www.themoviedb.org/tv/30991-cowboy-bebop) and hover over the "Original Air Date" shown to the right of "Last Season", you'll see a dropdown of possible ordering:
+
+![TMDB orderings](bebop-orderings.png)
+
+The default "Original Air Date" ordering is very different to the ordering I had (and very different to [episode list on Wikipedia](https://en.wikipedia.org/wiki/List_of_Cowboy_Bebop_episodes)).
+
+The ordering I had matched the "Blu-ray Order (DVD)" order - if you click on that one, you get to the episode groups for that ordering:
+
+![TMDB blu-ray order](bebop-nfo-url.png)
+
+So, now you need to:
+
+* Make sure your episodes are in folders that match the names seen here, so `Season 1` rather than `S01` - this sounds odd but there are cases where the seasons have names like `Staffel 1` (as [here](https://www.themoviedb.org/tv/30983-case-closed/episode_group/5afdcddd92514127a0001878)) and the naming _seems_ to be important.
+* Create a `tvshow.nfo` file, containing the URL of the episodes group page shown above, in the root folder for the seasons, i.e. not in one of the individual season folders.
+
+So, even tho' Cowboy Bebop has only one season, I ended up with this layout:
+
+```
+Cowboy Bebop (1998)
+├── Season 1
+│   ├── Cowboy.Bebop.S01E01-Asteroid.Blues.mkv
+│   ├── ...
+│   └── Cowboy.Bebop.S01E26-The.Real.Folk.Blues.(2).mkv
+└── tvshow.nfo
+```
+
+And the `tvshow.nfo` file contained just:
+
+```
+https://www.themoviedb.org/tv/30991-cowboy-bebop/episode_group/606a5cf909c24c00782bbf59
+```
+
+I made a number of mistakes before I got this to work - the `tvshow.nfo` file needs to be in the show's root, initially I had it in my `S01` folder and used the URL of just that season, i.e.:
+
+```
+https://www.themoviedb.org/tv/30991-cowboy-bebop/episode_group/606a5cf909c24c00782bbf59/group/606a5d4909c24c0040c8a5fe
+```
+
+Note the extra `/group/606...` bit at the end, that designates the individual season - and isn't supported.
+
+And more annoyingly, even if you fix things on disk, the scrapper carries on using cached data even if you tell it to ignore "locally stored information". You have to remove the scrapper's temporary cache like so:
+
+```
+$ ssh root@libreelec.local
+# cd /storage/.kodi/temp/scrapers
+# ls
+metadata.themoviedb.org.python   metadata.tvshows.themoviedb.org.python
+# cd metadata.tvshows.themoviedb.org.python
+# rm *.pickle
+```
+
+This really is just temporary cache data. You don't need to reboot the box or do anything additional to force the scrapper to "forget" this data.
+
+Now, find the show in Kodi, press _Info_, navigate the the right-most option at the bottom of the info page, i.e. to _Refresh_, click it and:
+
+* It asks "Refresh information for all episodes", select _Yes_.
+* It asks "Locally stored information found. Ignore and refresh from Internet?", select _Yes_.
+* When it shows the relevant show, just press OK.
+
+That's it, assuming the `.pickle` files from any previous "bad" run have been cleaned out, it should have picked things up via the `.nfo` file.
+
+Note: `tvshow.nfo` is obviously for TV shows - there are other names for movies etc. covered [here](https://kodi.wiki/view/NFO_files/Parsing). You can even use `.nfo` files to provide full metadata as covered [here](https://kodi.wiki/view/NFO_files).
+
 4K vs 1080p
 -----------
 
